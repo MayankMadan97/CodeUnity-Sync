@@ -12,6 +12,25 @@
   "activationEvents": [],
   "main": "./dist/extension.js",
   "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "codesync",
+          "title": "Code Sync",
+          "icon": "$(testing-show-as-list-icon)"
+        }
+      ]
+    },
+    "views": {
+      "codesync": [
+        {
+          "id": "codesync-list",
+          "name": "To Do List",
+          "type": "webview",
+          "visibility": "visible"
+        }
+      ]
+    },
     "commands": [
       {
         "command": "codesync-unity.helloWorld",
