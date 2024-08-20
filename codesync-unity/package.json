@@ -25,9 +25,7 @@
       "codesync": [
         {
           "id": "codesync-list",
-          "name": "To Do List",
-          "type": "webview",
-          "visibility": "visible"
+          "name": "To Do List"
         }
       ]
     },
