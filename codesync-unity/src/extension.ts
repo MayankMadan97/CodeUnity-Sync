@@ -19,7 +19,6 @@ export function activate(context: vscode.ExtensionContext) {
 		// Display a message box to the user
 		vscode.window.showInformationMessage('Hello World from CodeSync Unity!');
 	});
-
 	vscode.window.registerTreeDataProvider('codesync-list', new ListItemProvider());
 
 	context.subscriptions.push(disposable);
