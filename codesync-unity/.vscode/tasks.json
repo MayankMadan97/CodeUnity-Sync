@@ -22,7 +22,7 @@
 				"chokidar",
 				"${workspaceFolder}/dist/**/*",
 				"-c",
-				"${workspaceFolder}/.vscode/executeReload.sh"
+				"npm run reload-window"
 			],
 			"options": {
 				"cwd": "${workspaceFolder}"

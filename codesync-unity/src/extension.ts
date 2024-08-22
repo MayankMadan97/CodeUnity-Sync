@@ -2,6 +2,8 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import { ListItemProvider } from './ListItemProvider';
+import * as fs from 'fs';
+import * as path from 'path';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -21,6 +23,14 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 	vscode.window.registerTreeDataProvider('codesync-list', new ListItemProvider());
 
+	const distFolderPath = path.join(context.extensionPath, 'dist');
+    
+    // Watch for changes in the dist folder
+    fs.watch(distFolderPath, (eventType, filename) => {
+        if (eventType === 'change' || eventType === 'rename') {
+            vscode.commands.executeCommand('workbench.action.reloadWindow');
+        }
+    });
 	context.subscriptions.push(disposable);
 }
 

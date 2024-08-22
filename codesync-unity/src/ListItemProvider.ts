@@ -14,7 +14,7 @@ export class ListItemProvider implements vscode.TreeDataProvider<MyTreeItem> {
       new MyTreeItem('Item 1'),
       new MyTreeItem('Item 2'),
       new MyTreeItem('Item 3'),
-      new MyTreeItem('Item 6')
+      new MyTreeItem('Item 5')
     ]);
   }
 }
