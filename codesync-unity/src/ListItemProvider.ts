@@ -12,7 +12,7 @@ export class ListItemProvider implements vscode.TreeDataProvider<MyTreeItem> {
     // Return the children of the current node (or root nodes if `element` is undefined)
     return Promise.resolve([
       new MyTreeItem('Item 1'),
-      new MyTreeItem('Item 2'),
+      new MyTreeItem('Item 5'),
       new MyTreeItem('Item 3'),
       new MyTreeItem('Item 5')
     ]);
