@@ -1,0 +1,528 @@
+{
+    "tables": [
+        {
+            "name": "Users",
+            "columns": [
+                {
+                    "name": "user_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "username",
+                    "type": "VARCHAR(255)",
+                    "unique": true,
+                    "nullable": true
+                },
+                {
+                    "name": "email",
+                    "type": "VARCHAR(255)",
+                    "unique": true,
+                    "nullable": true
+                },
+                {
+                    "name": "password_hash",
+                    "type": "VARCHAR(255)",
+                    "nullable": true
+                },
+                {
+                    "name": "external_user_id",
+                    "type": "VARCHAR(255)",
+                    "unique": true,
+                    "nullable": true
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "OAuthProviders",
+            "columns": [
+                {
+                    "name": "provider_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "provider_name",
+                    "type": "ENUM",
+                    "values": [
+                        "GitHub",
+                        "Google",
+                        "JIRA"
+                    ]
+                },
+                {
+                    "name": "client_id",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "client_secret",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "redirect_uri",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "UserOAuth",
+            "columns": [
+                {
+                    "name": "user_oauth_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "user_id",
+                    "type": "UUID",
+                    "foreign_key": "Users.user_id"
+                },
+                {
+                    "name": "provider_id",
+                    "type": "UUID",
+                    "foreign_key": "OAuthProviders.provider_id"
+                },
+                {
+                    "name": "provider_user_id",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "access_token",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "refresh_token",
+                    "type": "VARCHAR(255)",
+                    "nullable": true
+                },
+                {
+                    "name": "token_expiry",
+                    "type": "TIMESTAMP",
+                    "nullable": true
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "Projects",
+            "columns": [
+                {
+                    "name": "project_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "user_id",
+                    "type": "UUID",
+                    "foreign_key": "Users.user_id"
+                },
+                {
+                    "name": "project_name",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT",
+                    "nullable": true
+                },
+                {
+                    "name": "external_project_id",
+                    "type": "VARCHAR(255)",
+                    "nullable": true
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "TaskLists",
+            "columns": [
+                {
+                    "name": "list_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "project_id",
+                    "type": "UUID",
+                    "foreign_key": "Projects.project_id"
+                },
+                {
+                    "name": "list_name",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT",
+                    "nullable": true
+                },
+                {
+                    "name": "order_index",
+                    "type": "INTEGER"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "Tasks",
+            "columns": [
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "list_id",
+                    "type": "UUID",
+                    "foreign_key": "TaskLists.list_id"
+                },
+                {
+                    "name": "task_name",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "description",
+                    "type": "TEXT",
+                    "nullable": true
+                },
+                {
+                    "name": "status",
+                    "type": "ENUM",
+                    "values": [
+                        "Pending",
+                        "In Progress",
+                        "Completed"
+                    ]
+                },
+                {
+                    "name": "order_index",
+                    "type": "INTEGER"
+                },
+                {
+                    "name": "external_task_id",
+                    "type": "VARCHAR(255)",
+                    "nullable": true
+                },
+                {
+                    "name": "assignee_id",
+                    "type": "UUID",
+                    "foreign_key": "Users.user_id",
+                    "nullable": true
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "TaskComments",
+            "columns": [
+                {
+                    "name": "comment_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "foreign_key": "Tasks.task_id"
+                },
+                {
+                    "name": "user_id",
+                    "type": "UUID",
+                    "foreign_key": "Users.user_id"
+                },
+                {
+                    "name": "comment_text",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "CodeSnippets",
+            "columns": [
+                {
+                    "name": "snippet_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "foreign_key": "Tasks.task_id"
+                },
+                {
+                    "name": "language",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "code",
+                    "type": "TEXT"
+                },
+                {
+                    "name": "line_start",
+                    "type": "INTEGER",
+                    "nullable": true
+                },
+                {
+                    "name": "line_end",
+                    "type": "INTEGER",
+                    "nullable": true
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "Files",
+            "columns": [
+                {
+                    "name": "file_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "foreign_key": "Tasks.task_id"
+                },
+                {
+                    "name": "file_path",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "Directories",
+            "columns": [
+                {
+                    "name": "directory_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "foreign_key": "Tasks.task_id"
+                },
+                {
+                    "name": "directory_path",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "TaskDependencies",
+            "columns": [
+                {
+                    "name": "dependency_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "foreign_key": "Tasks.task_id"
+                },
+                {
+                    "name": "dependent_task_id",
+                    "type": "UUID",
+                    "foreign_key": "Tasks.task_id"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "Tags",
+            "columns": [
+                {
+                    "name": "tag_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "name",
+                    "type": "VARCHAR(255)",
+                    "unique": true
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP",
+                    "on_update": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "TaskTags",
+            "columns": [
+                {
+                    "name": "task_tag_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "foreign_key": "Tasks.task_id"
+                },
+                {
+                    "name": "tag_id",
+                    "type": "UUID",
+                    "foreign_key": "Tags.tag_id"
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                }
+            ]
+        },
+        {
+            "name": "Notifications",
+            "columns": [
+                {
+                    "name": "notification_id",
+                    "type": "UUID",
+                    "primary_key": true
+                },
+                {
+                    "name": "task_id",
+                    "type": "UUID",
+                    "foreign_key": "Tasks.task_id"
+                },
+                {
+                    "name": "message",
+                    "type": "VARCHAR(255)"
+                },
+                {
+                    "name": "scheduled_at",
+                    "type": "TIMESTAMP"
+                },
+                {
+                    "name": "status",
+                    "type": "ENUM",
+                    "values": [
+                        "Pending",
+                        "Sent"
+                    ]
+                },
+                {
+                    "name": "created_at",
+                    "type": "TIMESTAMP",
+                    "default": "CURRENT_TIMESTAMP"
+                }
+            ]
+        }
+    ]
+}
